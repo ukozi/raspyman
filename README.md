@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="screenshot.png" width="400">
+</p>
+
 # Raspyman
 
 A modern administration interface for the Retro Aim Server (RAS). This application provides a clean web-based UI for managing user accounts, chat rooms, and directory services on RAS instances.
