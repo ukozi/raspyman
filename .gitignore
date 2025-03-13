@@ -1,0 +1,5 @@
+# Ignore specific directories
+.cursor/
+.git/
+.nova/
+env/
