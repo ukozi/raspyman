@@ -63,4 +63,4 @@ This project is built with [Rio](https://rio.dev/), a Python framework for build
 
 ## Acknowledgements
 
-Special thanks to the [Retro AIM Server](https://github.com/dequeues/Retro-Aim-Server) project for providing the backend service that makes this administration interface possible.
+Special thanks to the [Retro AIM Server](https://github.com/mk6i/retro-aim-server) project for providing the backend service that makes this administration interface possible.
