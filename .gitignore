@@ -3,3 +3,6 @@
 .git/
 .nova/
 env/
+components/__pycache__/
+pages/__pycache__/
+.DS_Store
