@@ -360,6 +360,19 @@ class UsersPage(rio.Component):
                 self.banner_text = f"Failed to update status for '{user.screen_name}'"
                 self.banner_style = "danger"
     
+    async def on_user_clicked(self, user: data_models.User) -> None:
+        """
+        Handle navigation to user details when a user is clicked.
+        
+        Args:
+            user: The user to view details for
+        """
+        # Construct the URL with query parameter for the screen name
+        user_details_url = rio.URL("/user_details").with_query({"screen_name": user.screen_name})
+        
+        # Navigate to the user details page
+        self.session.navigate_to(user_details_url)
+    
     def build(self) -> rio.Component:
         """
         Build the users page UI.
@@ -387,17 +400,6 @@ class UsersPage(rio.Component):
             },
         ]
         
-        # Create a description text (without the title)
-        description = rio.Text(
-            "Manage all user accounts. Create new users, reset passwords, update user status, or delete accounts.",
-            style=rio.TextStyle(
-                font_size=1.1,
-                fill=theme.TEXT_FILL_DARKER,
-                italic=True,
-            ),
-            margin_bottom=1,
-        )
-        
         # Create the CRUD list with configurations for users
         users_list = CRUDList[data_models.User](
             # Data and state
@@ -411,7 +413,7 @@ class UsersPage(rio.Component):
             banner_style=self.banner_style,
             
             # List configuration
-            title="User Accounts",  # Move title here
+            title="User Management",  # Changed to User Management
             create_item_text="Create New User",
             create_item_description="Add a new user account",
             create_item_icon="material/person_add",
@@ -425,6 +427,7 @@ class UsersPage(rio.Component):
             # Callbacks
             on_create_item=self.on_create_new_user,
             on_refresh=self.load_users,
+            on_item_press=self.on_user_clicked,  # Add callback for item press
             
             # Action buttons
             action_buttons=action_buttons,
@@ -432,9 +435,14 @@ class UsersPage(rio.Component):
         
         # Return the final layout
         return rio.Column(
-            description,
+            # Header section
+            rio.Text(
+                "Users",
+                style="heading1",
+                margin_bottom=2,
+            ),
             users_list,
-            spacing=0,
+            spacing=0.5,
             align_y=0,
             grow_x=True,
             grow_y=True,

@@ -5,9 +5,10 @@ import rio
 # Import all pages so they are registered
 from .dashboard_page import DashboardPage
 from .users_page import UsersPage
-from .sessions_page import SessionsPage
 from .chatrooms_page import ChatroomsPage
 from .directory_page import DirectoryPage
+from .user_details_page import UserDetailsPage
+from .send_message_page import SendMessagePage
 
 @rio.page(
     name="Root",

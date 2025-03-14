@@ -72,6 +72,8 @@ class StatCard(rio.Component):
                     rio.Icon(
                         icon=self.icon,
                         fill=self.color,
+                        min_width=2.2,
+                        min_height=2.2,
                     ),
                     rio.Spacer(),
                     align_y=0.5,

@@ -496,17 +496,6 @@ class DirectoryPage(rio.Component):
         Returns:
             Single-card layout with SwitcherBar and CRUDList for the directory page
         """
-        # Create a description row
-        description = rio.Text(
-            "Manage your AIM directory categories and keywords. Select a category to view and edit its keywords.",
-            style=rio.TextStyle(
-                font_size=1.1,
-                fill=theme.TEXT_FILL_DARKER,
-                italic=True,
-            ),
-            margin_bottom=1,
-        )
-        
         # Action buttons for keywords
         keyword_action_buttons = [
             {
@@ -574,17 +563,10 @@ class DirectoryPage(rio.Component):
         
         # Row for category management buttons
         category_management_row = rio.Row(
-            rio.Text(
-                "Categories:", 
-                style=rio.TextStyle(
-                    font_weight="bold",
-                ),
-            ),
             rio.Spacer(),
             add_category_button,
             delete_category_button,
             spacing=0.5,
-            margin_bottom=0.5,
             grow_x=True,
         )
         
@@ -605,8 +587,9 @@ class DirectoryPage(rio.Component):
                 orientation="horizontal",
                 on_change=on_switcher_change,
                 spacing=0.2,  # Much smaller spacing between items (default is 1.0)
-                align_x=0.5,
-                min_width=40
+                margin_left=2,
+                margin_right=2,
+                margin_top=.5
             ),
             scroll_x="auto",
             scroll_y="never",
@@ -644,30 +627,45 @@ class DirectoryPage(rio.Component):
             action_buttons=keyword_action_buttons,
         )
         
-        # Build the combined layout with switcher bar and keywords list
-        content = rio.Column(
-            category_management_row,
-            category_switcher,
-            rio.Separator(margin_y=1),
-            keywords_list,
-            spacing=0.5,
-            margin=1,
-            grow_y=True,
-        )
-        
-        # Wrap in a card
-        card = rio.Card(
-            content,
-            margin=0.5,
-            grow_y=True,
-            min_width=72,
-        )
-        
         # Return the final layout
         return rio.Column(
-            description,
-            card,
-            spacing=0,
+            # Header section at the top of the page
+            rio.Text(
+                "Directory",
+                style="heading1",
+                margin_bottom=2,
+            ),
+            
+            # FIRST CARD: Categories section
+            rio.Card(
+                rio.Column(
+                    # Categories title and action buttons in the same row
+                    rio.Row(
+                        rio.Text(
+                            "Categories",
+                            style=rio.TextStyle(
+                                font_size=1.5,
+                                font_weight="bold",
+                            ),
+                        ),
+                        rio.Spacer(),
+                        add_category_button,
+                        delete_category_button,
+                        spacing=0.5,
+                        align_y=0.5,
+                        grow_x=True,
+                    ),
+                    category_switcher,
+                    spacing=0.5,
+                    margin=2,  # Match CRUDList inner margin
+                ),
+                grow_x=True,  # Match CRUDList card's grow behavior
+                margin_bottom=1,   # Margin for the card
+            ),
+            
+            # Keywords CRUDList section (directly placed, no Container needed)
+            keywords_list,
+            spacing=0.5,
             align_y=0,
             grow_x=True,
             grow_y=True,
