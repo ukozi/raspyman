@@ -47,7 +47,7 @@ pip install -r requirements.txt
 Start the application with:
 
 ```bash
-rio run
+rio run --release
 ```
 
 Once the application is running, open your browser and navigate to:
