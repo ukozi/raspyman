@@ -3,6 +3,8 @@
 .git/
 .nova/
 env/
-components/__pycache__/
-pages/__pycache__/
+# Ignore all __pycache__ directories
+__pycache__/
+*/__pycache__/
+**/__pycache__/
 .DS_Store

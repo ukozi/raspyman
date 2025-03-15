@@ -31,6 +31,7 @@ class CRUDList(rio.Component, t.Generic[T]):
         item_icon_default_color: Default color for item icons
         on_create_item: Function to call when creating a new item
         on_refresh: Function to call when refreshing the list
+        on_item_press: Function to call when an item is clicked
         action_buttons: List of action buttons to display for each item
         header_buttons: List of additional buttons to display in the header
     """
@@ -62,6 +63,7 @@ class CRUDList(rio.Component, t.Generic[T]):
     # Callbacks
     on_create_item: t.Optional[t.Callable[[], t.Awaitable[None]]] = None
     on_refresh: t.Optional[t.Callable[[], t.Awaitable[None]]] = None
+    on_item_press: t.Optional[t.Callable[[T], t.Awaitable[None]]] = None
     
     # Action buttons
     action_buttons: t.List[t.Dict[str, t.Any]] = []
@@ -168,6 +170,11 @@ class CRUDList(rio.Component, t.Generic[T]):
                     spacing=0.5,
                 )
             
+            # Create list item with on_press callback if provided
+            list_item_on_press = None
+            if self.on_item_press:
+                list_item_on_press = lambda item=item: self.session.create_task(self.on_item_press(item))
+            
             # Create list item
             list_items.append(
                 rio.SimpleListItem(
@@ -179,6 +186,7 @@ class CRUDList(rio.Component, t.Generic[T]):
                         fill=icon_color,
                     ),
                     right_child=right_child,
+                    on_press=list_item_on_press,
                 )
             )
         
@@ -198,7 +206,6 @@ class CRUDList(rio.Component, t.Generic[T]):
                 align_y=0.5,
                 margin=5,
                 grow_x=True,
-                min_width=20,
             )
         elif self.has_error:
             content = rio.Column(
@@ -223,7 +230,6 @@ class CRUDList(rio.Component, t.Generic[T]):
                 align_y=0.5,
                 margin=5,
                 grow_x=True,
-                min_width=20,
             )
         elif not self.items:
             # Empty state when there are no items but no error
@@ -284,14 +290,12 @@ class CRUDList(rio.Component, t.Generic[T]):
                 align_y=0.5,
                 margin=5,
                 grow_x=True,
-                min_width=71,
             )
         else:
             content = rio.ListView(
                 *list_items,
                 align_y=0,
                 grow_x=True,
-                min_width=71,
             )
         
         # Build the main layout
@@ -367,7 +371,7 @@ class CRUDList(rio.Component, t.Generic[T]):
                 ),
                 grow_x=True,
             ),
-            margin=2,
+            margin=0,
             align_y=0,
             grow_x=True,
             grow_y=True,

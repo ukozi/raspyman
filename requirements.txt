@@ -2,11 +2,6 @@ annotated-types==0.7.0
 anyio==4.8.0
 blessed==1.20.0
 certifi==2025.1.31
-cffi==1.17.1
-click==8.1.8
-colorama==0.4.6
-crawlerdetect==0.1.7
-cryptography==44.0.2
 fastapi==0.115.11
 fuzzywuzzy==0.18.0
 gitignore_parser==0.1.11
@@ -19,7 +14,6 @@ imy==0.6.1
 introspection==1.9.9
 isort==5.13.2
 jaraco.classes==3.4.0
-jeepney==0.9.0
 keyring==24.3.1
 langcodes==3.5.0
 language_data==1.3.0
@@ -32,9 +26,6 @@ narwhals==1.30.0
 ordered-set==4.1.0
 path-imports==1.1.2
 pillow==10.4.0
-pip==24.3.1
-propcache==0.3.0
-pycparser==2.22
 pydantic==2.10.6
 pydantic_core==2.27.2
 python-dateutil==2.9.0.post0
@@ -46,7 +37,6 @@ RapidFuzz==3.12.2
 readchar==4.2.1
 revel==0.9.1
 rio-ui==0.11.1
-SecretStorage==3.3.3
 sentinel==1.0.0
 setuptools==76.0.0
 six==1.17.0

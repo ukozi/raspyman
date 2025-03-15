@@ -5,10 +5,14 @@ import rio
 
 from .. import data_models
 from .. import theme
+from .sidebar_sessions import SidebarSessions
 
 class AdminSidebar(rio.Component):
     """
     Sidebar navigation for the RAS admin interface.
+    
+    Now implemented as an overlay component that stays fixed 
+    on the left side of the screen.
     """
     active_page: str = ""
     
@@ -40,7 +44,6 @@ class AdminSidebar(rio.Component):
         nav_items = [
             ("dashboard", "Dashboard", "material/space_dashboard:fill"),
             ("users", "Users", "material/person:fill"),
-            ("sessions", "Sessions", "material/conversion_path:fill"),
             ("chatrooms", "Chat Rooms", "material/chat:fill"),
             ("directory", "Directory", "material/menu_book:fill"),
         ]
@@ -100,13 +103,13 @@ class AdminSidebar(rio.Component):
                 )
             )
         
-        # The entire sidebar container
-        return rio.Rectangle(
+        # Create the sidebar content with all styling intact
+        sidebar_content = rio.Rectangle(
             content=rio.Column(
                 # Title at top
                 rio.Row(
                     rio.Text(
-                        "RAS Admin",
+                        "RASPyMAN",
                         style=rio.TextStyle(
                             font_size=1.6,
                             font_weight="bold",
@@ -120,6 +123,17 @@ class AdminSidebar(rio.Component):
                 # Navigation links
                 nav_links,
                 
+               
+                # Add separator before online users section
+                rio.Separator(
+                    color=rio.Color.from_hex("#444444"),
+                    margin_y=0.5,
+                    margin_top=2,
+                ),
+                
+                # Sessions component that shows active users
+                SidebarSessions(),
+                
                 # Spacer that pushes everything up
                 rio.Spacer(),
                 
@@ -132,4 +146,16 @@ class AdminSidebar(rio.Component):
             stroke_width=0,
             corner_radius=0,
             min_height=100,
+            # Position it at the left side of the screen
+            align_x=0,
+            align_y=0,
+        )
+        
+        # Wrap the sidebar content in an overlay so it stays fixed
+        return rio.Overlay(
+            content=rio.Container(
+                content=sidebar_content,
+                align_x=0,  # Left align
+                align_y=0,  # Top align
+            )
         ) 

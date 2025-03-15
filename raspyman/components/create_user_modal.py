@@ -30,9 +30,9 @@ class CreateUserModal(rio.Component):
             rio.Column(
                 rio.Text("Screen Name"),
                 rio.TextInput(
-                    value=self.screen_name,
+                    text=self.screen_name,
                     on_change=lambda v: setattr(self, "screen_name", v),
-                    placeholder="Enter AIM screen name or ICQ UIN",
+                    label="Enter AIM screen name or ICQ UIN",
                     min_width="100%",
                 ),
                 spacing=0.5,
@@ -44,9 +44,9 @@ class CreateUserModal(rio.Component):
             rio.Column(
                 rio.Text("Password"),
                 rio.TextInput(
-                    value=self.password,
+                    text=self.password,
                     on_change=lambda v: setattr(self, "password", v),
-                    placeholder="Enter password",
+                    label="Enter password",
                     password=True,
                     min_width="100%",
                 ),

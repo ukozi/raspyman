@@ -239,7 +239,8 @@ class Navbar(rio.Component):
                             ),
                             spacing=1,
                             margin_y=1,
-                            min_width=80,
+                            # Adjust to match our content width constraint
+                            min_width=70,
                             align_x=0.5,
                         ),
                         rio.Spacer(),

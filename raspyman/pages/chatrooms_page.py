@@ -182,17 +182,6 @@ class ChatroomsPage(rio.Component):
             },
         ]
         
-        # Create a description text (without the title)
-        description = rio.Text(
-            "View and manage active chat rooms. Create new rooms or remove existing ones.",
-            style=rio.TextStyle(
-                font_size=1.1,
-                fill=theme.TEXT_FILL_DARKER,
-                italic=True,
-            ),
-            margin_bottom=1,
-        )
-        
         # Create the CRUD list with configurations for chat rooms
         chat_rooms_list = CRUDList[data_models.ChatRoom](
             # Data and state
@@ -206,7 +195,7 @@ class ChatroomsPage(rio.Component):
             banner_style=self.banner_style,
             
             # List configuration
-            title="Chat Rooms",  # Move title here
+            title="Chat Room Management",
             create_item_text="Create New Chat Room",
             create_item_description="Create a new chat room",
             create_item_icon="material/chat",
@@ -228,9 +217,14 @@ class ChatroomsPage(rio.Component):
         
         # Return the final layout
         return rio.Column(
-            description,
+            # Header section
+            rio.Text(
+                "Chat Rooms",
+                style="heading1",
+                margin_bottom=2,
+            ),
             chat_rooms_list,
-            spacing=0,
+            spacing=0.5,
             align_y=0,
             grow_x=True,
             grow_y=True,

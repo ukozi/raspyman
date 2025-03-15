@@ -48,13 +48,37 @@ class DashboardPage(rio.Component):
         # Ensure the URL is valid
         new_url = event.text
         if new_url == "http://localhost:500":
-            # Fix the typo automatically
             new_url = "http://localhost:5000"
         
         settings.api_url = new_url
-        # Re-attach settings to ensure they're saved
+        
+    def on_admin_name_change(self, event: rio.TextInputChangeEvent) -> None:
+        """Handle admin screen name input changes."""
+        settings = self.session[data_models.RasApiSettings]
+        settings.admin_screen_name = event.text
+
+    def on_admin_name_confirm(self, _: rio.TextInputEvent) -> None:
+        """Handle admin screen name confirm (Enter key press)."""
+        # Just save the settings like pressing the Save button
+        self.on_save_admin_name()
+        
+    def on_save_admin_name(self, _: rio.Event = None) -> None:
+        """Save the admin screen name to user settings."""
+        settings = self.session[data_models.RasApiSettings]
+        
+        # Mark as modified and re-attach to save
+        if hasattr(settings, '_mark_as_modified'):
+            settings._mark_as_modified()
+        
+        # Update timestamp
+        settings.last_connected = datetime.datetime.now().isoformat()
+        
+        # Re-attach settings to session to ensure they're saved
         self.session.attach(settings)
         
+        # Force a UI refresh to show the updated screen name immediately
+        self.force_refresh()
+
     def on_api_url_confirm(self, event: rio.TextInputConfirmEvent) -> None:
         """Save API URL to session when confirmed (Enter key)."""
         settings = self.session[data_models.RasApiSettings]
@@ -371,26 +395,13 @@ class DashboardPage(rio.Component):
             # Re-attach settings to ensure they're saved
             self.session.attach(settings)
         
-        # Settings saved status
-        settings_info = ""
-        if settings.last_connected:
-            settings_info = f"Settings last saved: {settings.last_connected}"
-        
         # Main dashboard content
         return rio.Column(
             # Header section
             rio.Text(
-                "Retro AIM Server Dashboard",
+                "Dashboard",
                 style="heading1",
-            ),
-            
-            # Welcome text
-            rio.Text(
-                "Welcome to the RAS Admin interface. Use the sidebar to navigate to different sections.",
-                style=rio.TextStyle(
-                    font_size=1.1,
-                    fill=theme.TEXT_FILL_DARKER,
-                ),
+                margin_bottom=2,
             ),
             
             # Stats row
@@ -398,7 +409,7 @@ class DashboardPage(rio.Component):
                 StatCard(
                     title="Active Sessions",
                     value=self.active_sessions,
-                    icon="material/conversion_path:fill",
+                    icon="material/person_raised_hand",
                     color="primary",
                     is_loading=self.loading_sessions,
                     has_error=self.has_error_sessions,
@@ -406,7 +417,7 @@ class DashboardPage(rio.Component):
                 StatCard(
                     title="Chat Rooms",
                     value=self.chat_rooms,
-                    icon="material/chat:fill",
+                    icon="material/chat",
                     color="secondary",
                     is_loading=self.loading_chats,
                     has_error=self.has_error_chats,
@@ -414,7 +425,7 @@ class DashboardPage(rio.Component):
                 StatCard(
                     title="Total Users",
                     value=self.total_users,
-                    icon="material/person:fill",
+                    icon="material/person",
                     color="success",
                     is_loading=self.loading_users,
                     has_error=self.has_error_users,
@@ -422,13 +433,12 @@ class DashboardPage(rio.Component):
                 StatCard(
                     title="RAS Version",
                     value=self.version_info,
-                    icon="material/terminal:fill",
+                    icon="material/terminal",
                     color="primary",
                     is_loading=self.loading_version,
                     has_error=self.has_error_version,
                 ),
                 spacing=1.0,
-                margin_top=2,
                 margin_bottom=1,
             ),
             
@@ -436,7 +446,7 @@ class DashboardPage(rio.Component):
             rio.Card(
                 content=rio.Column(
                     rio.Text(
-                        "RAS API Settings",
+                        "RAS Connection Settings",
                         style=rio.TextStyle(
                             font_size=1.2,
                             font_weight="bold",
@@ -479,19 +489,64 @@ class DashboardPage(rio.Component):
                         ),
                         align_y=0.5,
                     ),
+                    spacing=1,
+                    margin=1,
+                ),
+            ),
+            
+            # Admin Screen Name Settings Card
+            rio.Card(
+                content=rio.Column(
                     rio.Text(
-                        settings_info,
+                        "Administrator Screen Name",
                         style=rio.TextStyle(
-                            font_size=0.9,
+                            font_size=1.2,
+                            font_weight="bold",
+                        ),
+                    ),
+                    rio.Text(
+                        "Set the screen name to use when sending administrator messages:",
+                        style=rio.TextStyle(
+                            font_size=1.0,
                             fill=theme.TEXT_FILL_DARKER,
                         ),
+                    ),
+                    rio.Text(
+                        f"Current Screen Name: {settings.admin_screen_name}",
+                        style=rio.TextStyle(
+                            font_size=1.0,
+                            fill=theme.TEXT_FILL_DARKER,
+                        ),
+                    ),
+                    rio.Row(
+                        rio.Text(
+                            "Screen Name:",
+                            style=rio.TextStyle(
+                                font_size=1.0,
+                            ),
+                            margin_right=0.5,
+                        ),
+                        rio.TextInput(
+                            text=settings.admin_screen_name,
+                            label="",
+                            on_change=self.on_admin_name_change,
+                            on_confirm=self.on_admin_name_confirm,
+                            grow_x=True,
+                            margin_right=1.0,
+                        ),
+                        rio.Button(
+                            content="Save",
+                            on_press=self.on_save_admin_name,
+                            style="major",
+                        ),
+                        align_y=0.5,
                     ),
                     spacing=1,
                     margin=1,
                 ),
-                margin_top=2,
+                margin_top=1,
             ),
-            
+            min_width=50,
             spacing=1,
             align_x=0,
         ) 

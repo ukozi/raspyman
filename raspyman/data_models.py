@@ -112,11 +112,13 @@ class RasApiSettings(rio.UserSettings):
     
     `api_url`: The URL of the RAS API endpoint.
     `last_connected`: When the API was last successfully connected to.
+    `admin_screen_name`: The screen name to use when sending messages as admin.
     """
     section_name = "api"  # Settings will be stored in the "api" section
     
     api_url: str = "http://localhost:5000"  # Default to a common local API port
     last_connected: t.Optional[str] = None  # ISO timestamp of last successful connection
+    admin_screen_name: str = "Admin"  # Default admin screen name for sending messages
     
     def __post_init__(self) -> None:
         """Ensure the API URL is properly initialized and persisted."""
